@@ -7,7 +7,9 @@
 //
 
 import UIKit
+
 import AFNetworking
+import MBProgressHUD
 
 let API_KEY = "e74114dd330fceeffc8c709bc0d32fdf"
 let BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500/"
@@ -52,6 +54,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegateQueue:OperationQueue.main
         )
         
+        // Display HUD right before the request is made
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        
         let task : URLSessionDataTask = session.dataTask(
             with: request as URLRequest,
             completionHandler: { (data, response, error) in
@@ -68,6 +73,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     self.tableView.bringSubview(toFront: self.networkErrorView)
                 }
                 self.refreshControl.endRefreshing()
+                
+                // Hide HUD once the network request comes back (must be done on main UI thread)
+                MBProgressHUD.hide(for: self.view, animated: true)
         });
         task.resume()
     }
