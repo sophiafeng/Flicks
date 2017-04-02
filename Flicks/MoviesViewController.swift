@@ -16,20 +16,27 @@ let BASE_IMAGE_URL = "https://image.tmdb.org/t/p/"
 let LARGE_IMAGE_SIZE_PARAM = "original/"
 let SMALL_IMAGE_SIZE_PARAM = "w45/"
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var networkErrorLabel: UILabel!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var endpoint: String! = "now_playing"
     var backgroundColor: UIColor!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var tabItemTitle: String! = "Now Playing"
+    var searchActive : Bool = false
+    var filtered:[NSDictionary] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up search bar
+        searchBar.delegate = self
+        searchActive = false
         
         // Set up table view
         tableView.dataSource = self
@@ -54,7 +61,95 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
+        // Make requests
         networkRequest()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: - Refresh control action method
+    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        networkRequest()
+    }
+    
+    // MARK: - UITableViewDataSource methods
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let movies = movies {
+            if(searchActive) {
+                return filtered.count
+            }
+            return movies.count
+        } else {
+            return 0
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
+        
+        var movie = movies![indexPath.row];
+        if(searchActive && indexPath.row < filtered.count){
+            movie = filtered[indexPath.row]
+        }
+        
+        let title = movie["title"] as! String
+        let overview = movie["overview"] as! String
+        let posterPath = movie["poster_path"] as! String
+        
+        self.loadImageIn(postView: cell.postView, posterPath: posterPath)
+        
+        cell.titleLabel.text = title
+        cell.overviewLabel.text = overview
+        cell.titleLabel.textColor = UIColor.white
+        cell.overviewLabel.textColor = UIColor.white
+        
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.clear
+    }
+    
+    // MARK: - Network request methods
+    
+    func loadImageIn(postView: UIImageView, posterPath: String) {
+        let smallImageUrl = BASE_IMAGE_URL + SMALL_IMAGE_SIZE_PARAM + posterPath
+        let largeImageUrl = BASE_IMAGE_URL + LARGE_IMAGE_SIZE_PARAM + posterPath
+        
+        let smallImageRequest = NSURLRequest(url: NSURL(string: smallImageUrl)! as URL)
+        let largeImageRequest = NSURLRequest(url: NSURL(string: largeImageUrl)! as URL)
+
+        postView.setImageWith(smallImageRequest as URLRequest,
+                              placeholderImage: nil,
+                              success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                                
+                                // imageResponse will be nil if the image is cached
+                                if smallImageResponse != nil {
+                                    print("Image was NOT cached, fade in image")
+                                    postView.alpha = 0.0
+                                    postView.image = smallImage
+                                    UIView.animate(withDuration: 0.4, animations: { () -> Void in
+                                        postView.alpha = 1.0
+                                    }, completion: { (success) -> Void in
+                                        postView.setImageWith(
+                                            largeImageRequest as URLRequest,
+                                            placeholderImage: smallImage,
+                                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                                postView.image = largeImage;
+                                        },
+                                            failure: nil)
+                                    })
+                                } else {
+                                    print("Image was cached so just update the image")
+                                    postView.image = smallImage
+                                }
+        },
+                              failure: { (imageRequest, imageResponse, error) -> Void in
+                                // do something for the failure condition
+        })
     }
     
     func networkRequest() {
@@ -92,85 +187,35 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // MARK: - Search bar methods
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
     }
     
-    // MARK: - Refresh control action method
-    func refreshControlAction(_ refreshControl: UIRefreshControl) {
-        networkRequest()
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
     }
     
-    // MARK: - UITableViewDataSource methods
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let movies = movies {
-            return movies.count
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filtered = (movies?.filter({ (movie) -> Bool in
+            let tmp: NSString = movie["title"] as! NSString
+            let range = tmp.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return range.location != NSNotFound
+        }))!
+        if(filtered.count == 0){
+            searchActive = false;
         } else {
-            return 0
+            searchActive = true;
         }
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        
-        let movie = self.movies![indexPath.row];
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
-        
-        self.loadImageIn(postView: cell.postView, posterPath: posterPath)
-        
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.titleLabel.textColor = UIColor.white
-        cell.overviewLabel.textColor = UIColor.white
-        
-        return cell
-    }
-    
-    func loadImageIn(postView: UIImageView, posterPath: String) {
-        let smallImageUrl = BASE_IMAGE_URL + SMALL_IMAGE_SIZE_PARAM + posterPath
-        let largeImageUrl = BASE_IMAGE_URL + LARGE_IMAGE_SIZE_PARAM + posterPath
-        
-        let smallImageRequest = NSURLRequest(url: NSURL(string: smallImageUrl)! as URL)
-        let largeImageRequest = NSURLRequest(url: NSURL(string: largeImageUrl)! as URL)
-
-        postView.setImageWith(smallImageRequest as URLRequest,
-                              placeholderImage: nil,
-                              success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
-                                
-                                // imageResponse will be nil if the image is cached
-                                if smallImageResponse != nil {
-                                    print("Image was NOT cached, fade in image")
-                                    postView.alpha = 0.0
-                                    postView.image = smallImage
-                                    UIView.animate(withDuration: 0.4, animations: { () -> Void in
-                                        postView.alpha = 1.0
-                                    }, completion: { (success) -> Void in
-                                        postView.setImageWith(
-                                            largeImageRequest as URLRequest,
-                                            placeholderImage: smallImage,
-                                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
-                                                postView.image = largeImage;
-                                        },
-                                            failure: { (request, response, error) -> Void in
-                                                // do something for the failure condition of the large image request
-                                                // possibly setting the ImageView's image to a default image
-                                        })
-                                    })
-                                } else {
-                                    print("Image was cached so just update the image")
-                                    postView.image = smallImage
-                                }
-        },
-                              failure: { (imageRequest, imageResponse, error) -> Void in
-                                // do something for the failure condition
-        })
-    }
-    
-    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.backgroundColor = UIColor.clear
+        self.tableView.reloadData()
     }
 
     // MARK: - Navigation
