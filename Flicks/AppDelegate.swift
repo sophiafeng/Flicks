@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let nowPlayingNavigationController = storyboard.instantiateViewController(withIdentifier: "MoviesNavigationController") as! UINavigationController
         let nowPlayingViewController = nowPlayingNavigationController.topViewController as! MoviesViewController
         nowPlayingViewController.endpoint = "now_playing"
+        nowPlayingViewController.tabItemTitle = "Now Playing"
         nowPlayingNavigationController.tabBarItem.title = "Now Playing"
         nowPlayingNavigationController.tabBarItem.image = #imageLiteral(resourceName: "nowplaying")
         nowPlayingViewController.backgroundColor = UIColor.darkGray
@@ -32,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let topRatedNavigationController = storyboard.instantiateViewController(withIdentifier: "MoviesNavigationController") as! UINavigationController
         let topRatedViewController = topRatedNavigationController.topViewController as! MoviesViewController
         topRatedViewController.endpoint = "top_rated"
+        topRatedViewController.tabItemTitle = "Top Rated"
         topRatedNavigationController.tabBarItem.title = "Top Rated"
         topRatedNavigationController.tabBarItem.image = #imageLiteral(resourceName: "toprated")
         topRatedViewController.backgroundColor = UIColor(red:0.79, green:0.49, blue:0.28, alpha:1.0)
@@ -40,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let upcomingNavigationController = storyboard.instantiateViewController(withIdentifier: "MoviesNavigationController") as! UINavigationController
         let upcomingViewController = upcomingNavigationController.topViewController as! MoviesViewController
         upcomingViewController.endpoint = "upcoming"
+        upcomingViewController.tabItemTitle = "Upcoming"
         upcomingNavigationController.tabBarItem.title = "Upcoming"
         upcomingNavigationController.tabBarItem.image = #imageLiteral(resourceName: "upcoming")
         upcomingViewController.backgroundColor = UIColor(red:0.28, green:0.60, blue:0.79, alpha:1.0)

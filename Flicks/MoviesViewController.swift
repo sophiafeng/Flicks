@@ -12,7 +12,9 @@ import AFNetworking
 import MBProgressHUD
 
 let API_KEY = "e74114dd330fceeffc8c709bc0d32fdf"
-let BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500/"
+let BASE_IMAGE_URL = "https://image.tmdb.org/t/p/"
+let LARGE_IMAGE_SIZE_PARAM = "original/"
+let SMALL_IMAGE_SIZE_PARAM = "w45/"
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -24,20 +26,30 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var backgroundColor: UIColor!
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
+    var tabItemTitle: String! = "Now Playing"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up table view
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = backgroundColor
         tableView.addSubview(networkErrorView)
         
+        // Set up network error message view
         networkErrorView.isHidden = true
         networkErrorLabel.text = "Network error. Please try refreshing again later."
         networkErrorLabel.textColor = UIColor.white
         
-        // Initialize a UIRefreshControl
+        // Customize navigation controler
+        self.navigationItem.title = tabItemTitle
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.tintColor = UIColor(red: 1.0, green: 0.25, blue: 0.25, alpha: 0.8)
+            navigationBar.backgroundColor = self.backgroundColor
+        }
+        
+        // Set up refresh control
         self.refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
@@ -106,15 +118,55 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         let posterPath = movie["poster_path"] as! String
-        let imageUrl = NSURL(string: BASE_IMAGE_URL + posterPath)
         
-        cell.postView.setImageWith(imageUrl! as URL)
+        self.loadImageIn(postView: cell.postView, posterPath: posterPath)
+        
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         cell.titleLabel.textColor = UIColor.white
         cell.overviewLabel.textColor = UIColor.white
         
         return cell
+    }
+    
+    func loadImageIn(postView: UIImageView, posterPath: String) {
+        let smallImageUrl = BASE_IMAGE_URL + SMALL_IMAGE_SIZE_PARAM + posterPath
+        let largeImageUrl = BASE_IMAGE_URL + LARGE_IMAGE_SIZE_PARAM + posterPath
+        
+        let smallImageRequest = NSURLRequest(url: NSURL(string: smallImageUrl)! as URL)
+        let largeImageRequest = NSURLRequest(url: NSURL(string: largeImageUrl)! as URL)
+
+        postView.setImageWith(smallImageRequest as URLRequest,
+                              placeholderImage: nil,
+                              success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                                
+                                // imageResponse will be nil if the image is cached
+                                if smallImageResponse != nil {
+                                    print("Image was NOT cached, fade in image")
+                                    postView.alpha = 0.0
+                                    postView.image = smallImage
+                                    UIView.animate(withDuration: 0.4, animations: { () -> Void in
+                                        postView.alpha = 1.0
+                                    }, completion: { (success) -> Void in
+                                        postView.setImageWith(
+                                            largeImageRequest as URLRequest,
+                                            placeholderImage: smallImage,
+                                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                                postView.image = largeImage;
+                                        },
+                                            failure: { (request, response, error) -> Void in
+                                                // do something for the failure condition of the large image request
+                                                // possibly setting the ImageView's image to a default image
+                                        })
+                                    })
+                                } else {
+                                    print("Image was cached so just update the image")
+                                    postView.image = smallImage
+                                }
+        },
+                              failure: { (imageRequest, imageResponse, error) -> Void in
+                                // do something for the failure condition
+        })
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

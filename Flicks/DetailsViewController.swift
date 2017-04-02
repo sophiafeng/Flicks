@@ -24,7 +24,7 @@ class DetailsViewController: UIViewController {
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
         
         if let posterPath = movie["poster_path"] as? String {
-            posterImageView.setImageWith(NSURL(string: BASE_IMAGE_URL + posterPath)! as URL)
+            posterImageView.setImageWith(NSURL(string: BASE_IMAGE_URL + LARGE_IMAGE_SIZE_PARAM + posterPath)! as URL)
         }
         titleLabel.text = movie["title"] as? String
         overviewLabel.text = movie["overview"] as? String
