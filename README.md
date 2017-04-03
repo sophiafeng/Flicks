@@ -40,6 +40,9 @@ Here's a demo with no network, then with wifi turned back on.
 
 <img src='http://imgur.com/ZrJHeoA.gif' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
 
+Here's a demo on the search bar:
+<img src='http://imgur.com/DhQ72Mc.gif' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
