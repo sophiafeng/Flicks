@@ -105,6 +105,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.overviewLabel.text = overview
         cell.titleLabel.textColor = UIColor.white
         cell.overviewLabel.textColor = UIColor.white
+        cell.rating.text = "🌟 \(String(describing: movie["vote_average"] as! Double))"
+        cell.releaseDate.text = "🎬 \(movie["release_date"] as? String ?? "N/A")"
+
         
         return cell
     }
@@ -222,7 +225,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)
-        let movie = self.movies![indexPath!.row]
+        var movie = movies![indexPath!.row];
+        if(searchActive && indexPath!.row < filtered.count){
+            movie = filtered[indexPath!.row]
+        }
         
         let detailViewController = segue.destination as! DetailsViewController
         detailViewController.movie = movie

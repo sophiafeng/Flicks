@@ -57,7 +57,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Overview" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bod-Yt-qNK">
-                                                    <rect key="frame" x="130" y="44" width="212" height="104"/>
+                                                    <rect key="frame" x="130" y="73" width="212" height="75"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -67,11 +67,27 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="122" height="157"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="rating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TeO-Qx-P4d">
+                                                    <rect key="frame" x="130" y="35" width="77" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="releasedate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LbC-aN-kIl">
+                                                    <rect key="frame" x="191" y="40" width="127" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="overviewLabel" destination="bod-Yt-qNK" id="7Fl-X9-hlf"/>
                                             <outlet property="postView" destination="V6W-nB-2OD" id="L1G-zM-Ueo"/>
+                                            <outlet property="rating" destination="TeO-Qx-P4d" id="USx-1O-clX"/>
+                                            <outlet property="releaseDate" destination="LbC-aN-kIl" id="Kb5-6p-3cI"/>
                                             <outlet property="titleLabel" destination="95g-cI-a5t" id="nyT-QS-iwl"/>
                                             <segue destination="oyk-mq-zmG" kind="push" id="LpZ-uD-Bh0"/>
                                         </connections>
@@ -110,18 +126,32 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" misplaced="YES" id="lqp-6S-GbH">
-                                        <rect key="frame" x="0.0" y="667" width="375" height="241"/>
+                                        <rect key="frame" x="0.0" y="667" width="375" height="185"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qWu-JH-ypx">
-                                                <rect key="frame" x="9.5" y="15" width="360" height="27.5"/>
+                                                <rect key="frame" x="10" y="15" width="358.5" height="27.5"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Rating" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SZn-5P-YxJ">
+                                                <rect key="frame" x="10" y="38" width="77" height="36"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Release date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xyh-89-oZn">
+                                                <rect key="frame" x="81" y="38" width="130" height="36"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="overview" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qKP-To-vlc">
-                                                <rect key="frame" x="9.5" y="50" width="356.5" height="38"/>
+                                                <rect key="frame" x="10" y="80" width="354.5" height="38"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -140,13 +170,15 @@
                         <outlet property="infoView" destination="lqp-6S-GbH" id="DkQ-zj-lnS"/>
                         <outlet property="overviewLabel" destination="qKP-To-vlc" id="Doc-c3-KZc"/>
                         <outlet property="posterImageView" destination="9i0-6U-pcE" id="z5G-7u-1xW"/>
+                        <outlet property="rating" destination="SZn-5P-YxJ" id="nbu-9H-ll1"/>
+                        <outlet property="releaseDate" destination="Xyh-89-oZn" id="E20-vA-ENp"/>
                         <outlet property="scrollView" destination="Sot-Bd-RaF" id="9vU-Kp-fK3"/>
                         <outlet property="titleLabel" destination="qWu-JH-ypx" id="vPm-0O-yXT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HKW-L7-OCA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="986" y="-605"/>
+            <point key="canvasLocation" x="985.5" y="-605.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="rT2-yb-XZD">
