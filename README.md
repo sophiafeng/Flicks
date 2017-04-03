@@ -2,7 +2,7 @@
 
 Flicks is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **X** hours spent in total
+Time spent: **13** hours spent in total
 
 ## User Stories
 
@@ -26,20 +26,25 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] Added a third tab for **Upcoming** movies.
-
+- [x] Added a third tab for **Upcoming** movies.
+- [x] Animate overview/title section on Detailed view
+- [x] Add rating and release date to movies list and detail view
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+Here's an overall walkthru:
 
-TODO
+<img src='http://imgur.com/a/ndgK1' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
+
+Here's a demo with no network, then with wifi turned back on.
+
+<img src='http://imgur.com/ZrJHeoA.gif' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-TODO
+It was really tricky navigating around the closure/block syntax, especially in the network request methods because of the nestness of the code. I also ran into a bug where the search results are inaccurate of the actual detail view once you tap on a movie, it took a while to figure that I was passing the wrong data in the prepare for segue method.
 
 ## License
 
