@@ -34,7 +34,7 @@ The following **additional** features are implemented:
 
 Here's an overall walkthru:
 
-<img src='http://imgur.com/YLzswkb.gif' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
+<img src='http://imgur.com/NdtvY5S.gif' title='Flicks Walkthrough' width='' alt='Flicks Walkthrough' />
 
 Here's a demo with no network, then with wifi turned back on.
 
